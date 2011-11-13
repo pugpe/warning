@@ -20,7 +20,7 @@ def air_now():
     get_city = lambda tr: tr.find('a').getText()
     get_index = lambda tr: tr.findChildren('td')[-3].getText()
 
-    trs = soup.findAll('tr', attrs={'bgcolor':re.compile('#EDF3F9|#FFFFFF')})
+    trs = soup.findAll('tr', attrs={'bgcolor': re.compile('#EDF3F9|#FFFFFF')})
 
     indexes = {}
     for tr in trs:
