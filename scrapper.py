@@ -29,6 +29,24 @@ def air_now():
 
     return indexes
 
+def english_mep():
+    '''
+    List of indexes of english_mep
+    http://english.mep.gov.cn/datarb/htm/index_1.html
+    '''
+
+    url = 'http://english.mep.gov.cn/datarb/htm/index_1.html'
+    soup = BeautifulSoup(requests.get(url).content)
+
+    trs = soup.findAll('tr', {'class': '.menu12'})
+
+    indexes = {}
+    for tr in trs:
+        city_name = tr.td.next
+        index = city_name.next.next
+        indexes[slugify(city_name)] = (city_name, index)
+
+    return indexes
 
 if __name__ == '__main__':
     d_indexes = air_now()
