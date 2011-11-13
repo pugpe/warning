@@ -48,5 +48,23 @@ def english_mep():
 
     return indexes
 
+def durban():
+    '''
+    Index of Durban
+    http://www2.nilu.no/airquality/
+    '''
+
+    url = 'http://www2.nilu.no/airquality/'
+    soup = BeautifulSoup(requests.get(url).content)
+
+    span = soup.find('span', {'class': 'head1'})
+    span_value = span.next
+    span_name = span_value.split(' ')[-1]
+
+    bolds = soup.findAll('b')
+    index = bolds[1].next
+
+    return {span_name:(span_name, index)}
+
 if __name__ == '__main__':
     d_indexes = air_now()
