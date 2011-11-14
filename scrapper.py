@@ -59,12 +59,25 @@ def durban():
 
     span = soup.find('span', {'class': 'head1'})
     span_value = span.next
-    span_name = span_value.split(' ')[-1]
+    city_name = span_value.split(' ')[-1]
 
     bolds = soup.findAll('b')
     index = bolds[1].next
 
-    return {span_name:(span_name, index)}
+    return {slugify(city_name):(city_name, index)}
+
+def hong_kong():
+    '''
+    Index of Hong Kong
+    http://www.epd-asg.gov.hk/
+    '''
+    
+    url = 'http://www.epd-asg.gov.hk/'
+    soup = BeautifulSoup(requests.get(url).content)
+    a = soup.find('a', {'href': '/english/backgd/Central.html'})
+    index = a.next.next.next.next.next.next
+    city_name = u'Hong Kong'
+    return {slugify(city_name):(city_name, index)}
 
 if __name__ == '__main__':
     d_indexes = air_now()
