@@ -31,7 +31,7 @@ def air_now():
 
 def english_mep():
     '''
-    List of indexes of english_mep
+    List of indexes of english_mep:
     http://english.mep.gov.cn/datarb/htm/index_1.html
     '''
 
@@ -50,7 +50,7 @@ def english_mep():
 
 def durban():
     '''
-    Index of Durban
+    Index of Durban:
     http://www2.nilu.no/airquality/
     '''
 
@@ -68,7 +68,7 @@ def durban():
 
 def hong_kong():
     '''
-    Index of Hong Kong
+    Index of Hong Kong:
     http://www.epd-asg.gov.hk/
     '''
     
@@ -78,6 +78,24 @@ def hong_kong():
     index = a.next.next.next.next.next.next
     city_name = u'Hong Kong'
     return {slugify(city_name):(city_name, index)}
+
+def sydney():
+    '''
+    Indexes of Sydney:
+    http://airquality.environment.nsw.gov.au/aquisnetnswphp/getPage.php?reportid=3
+    '''
+
+    url = 'http://airquality.environment.nsw.gov.au/aquisnetnswphp/getPage.php?reportid=3'
+    soup = BeautifulSoup(requests.get(url).content)
+    tds = soup.findAll('td', {'class':'region'})
+    indexes = {}
+
+    for td in tds:
+        index = td.findNext('td', {'rowspan':re.compile('\d'), 'class':re.compile('\w')}).next
+        region = td.next
+        indexes[slugify(region)] = (region, index)
+    
+    return indexes
 
 if __name__ == '__main__':
     d_indexes = air_now()
