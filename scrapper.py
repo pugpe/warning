@@ -107,5 +107,21 @@ def sydney():
     return indexes
 
 
+def toronto():
+    '''
+    TODO: Get all indices of Ontario
+    http://www.airqualityontario.com/reports/summary.php
+    Index of Toronto:
+    http://www.airqualityontario.com/reports/today.php?sites=31103
+    '''
+    url = 'http://www.airqualityontario.com/reports/today.php?sites=31103'
+    soup = BeautifulSoup(requests.get(url).content)
+
+    index = soup.findAll('p')[2].getText()
+    index = re.search(r'\d+', index).group()
+
+    return {'toronto': ('Toronto', index)}
+
+
 if __name__ == '__main__':
     d_indexes = air_now()
