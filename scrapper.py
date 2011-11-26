@@ -29,6 +29,7 @@ def air_now():
 
     return indexes
 
+
 def english_mep():
     '''
     List of indexes of english_mep:
@@ -48,6 +49,7 @@ def english_mep():
 
     return indexes
 
+
 def durban():
     '''
     Index of Durban:
@@ -64,38 +66,46 @@ def durban():
     bolds = soup.findAll('b')
     index = bolds[1].next
 
-    return {slugify(city_name):(city_name, index)}
+    return {slugify(city_name): (city_name, index)}
+
 
 def hong_kong():
     '''
     Index of Hong Kong:
     http://www.epd-asg.gov.hk/
     '''
-    
+
     url = 'http://www.epd-asg.gov.hk/'
     soup = BeautifulSoup(requests.get(url).content)
     a = soup.find('a', {'href': '/english/backgd/Central.html'})
     index = a.next.next.next.next.next.next
     city_name = u'Hong Kong'
-    return {slugify(city_name):(city_name, index)}
+    return {slugify(city_name): (city_name, index)}
+
 
 def sydney():
     '''
     Indexes of Sydney:
-    http://airquality.environment.nsw.gov.au/aquisnetnswphp/getPage.php?reportid=3
+    http://airquality.environment.nsw.gov.au/aquisnetnswphp/getPage.php?repor
+    tid=3
     '''
 
-    url = 'http://airquality.environment.nsw.gov.au/aquisnetnswphp/getPage.php?reportid=3'
+    url = ('http://airquality.environment.nsw.gov.au/aquisnetnswphp/getPage.'
+           'php?reportid=3')
     soup = BeautifulSoup(requests.get(url).content)
-    tds = soup.findAll('td', {'class':'region'})
+    tds = soup.findAll('td', {'class': 'region'})
     indexes = {}
 
     for td in tds:
-        index = td.findNext('td', {'rowspan':re.compile('\d'), 'class':re.compile('\w')}).next
+        index = td.findNext(
+                'td', {'rowspan': re.compile('\d'), 'class': re.compile('\w')}
+            )
+        index = index.next
         region = td.next
         indexes[slugify(region)] = (region, index)
-    
+
     return indexes
+
 
 if __name__ == '__main__':
     d_indexes = air_now()
