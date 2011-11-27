@@ -5,8 +5,16 @@ import requests
 from BeautifulSoup import BeautifulSoup
 
 
-def slugify(s):
-    return s.lower().replace(' ', '-')
+def slugify(value):
+    # from Django
+    """
+    Normalizes string, converts to lowercase, removes non-alpha characters,
+    and converts spaces to hyphens.
+    """
+    import unicodedata
+    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
+    return re.sub('[-\s]+', '-', value)
 
 
 def air_now():
@@ -121,6 +129,38 @@ def toronto():
     index = re.search(r'\d+', index).group()
 
     return {'toronto': ('Toronto', index)}
+
+
+def san_juan():
+    '''
+    San Juan
+    http://www.prtc.net/%7Ejcaaqs/indice/indice.html
+    '''
+    url = 'http://www.prtc.net/~jcaagua/computoaire.htm'  # iframe
+    soup = BeautifulSoup(requests.get(url).content)
+    index = soup.findAll('td')[3].getText()
+    return {'san-juan': ('San Juan', index)}
+
+
+def air_quality():
+    '''
+    All indexes of airqualitynow.eu
+    http://www.airqualitynow.eu/comparing_home.php
+    '''
+    url = 'http://www.airqualitynow.eu/comparing_home.php'
+    soup = BeautifulSoup(requests.get(url).content)
+    cities_tds = soup.findAll('td', {'class': re.compile('city_bkg\d+')})
+
+    indexes = {}
+    for td in cities_tds:
+        index = td.parent.findAll('td')[-1]  # background index: now
+
+        # Some kind of standart, empty string for null values
+        index = index.getText().replace('-', '')
+
+        indexes[slugify(td.getText())] = (td.getText(), index)
+
+    return indexes
 
 
 if __name__ == '__main__':
