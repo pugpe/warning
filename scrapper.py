@@ -187,5 +187,29 @@ def guimaraes():
     return {'guimaraes': (u'Guimarães', index)}
 
 
+def santiago():
+    '''
+    Santiago (all zones)
+    http://www.seremisaludrm.cl/sitio/pag/aire/indexjs3aireindices-prueba.asp
+    '''
+    url = ('http://www.seremisaludrm.cl/sitio/pag/aire/'
+            'indexjs3aireindices-prueba.asp')
+    soup = BeautifulSoup(requests.get(url).content)
+    idx_table = soup.find('td', {'bgcolor': '#000000'}).parent.parent
+    trs = idx_table.findAll('tr')
+
+    indexes = {}
+    for tr in trs:
+        tds = tr.findAll('td', {'bgcolor': '#000000'})
+
+        if tds:
+            strip_re = re.compile(r'^\d+-')
+            city = strip_re.sub('', tds[0].getText()).title()
+
+            indexes[slugify(city)] = (city, tds[-1].getText())
+
+    return indexes
+
+
 if __name__ == '__main__':
     d_indexes = air_now()
