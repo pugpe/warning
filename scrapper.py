@@ -163,5 +163,15 @@ def air_quality():
     return indexes
 
 
+def lisbon():
+    '''
+    '''
+    url = 'http://www.qualar.org/INDEX.PHP?page=1&subzona=4'
+    soup = BeautifulSoup(requests.get(url).content)
+    td_base = soup.find('td', {'bgcolor': '#434343'})
+    index = td_base.parent.parent.find('center').getText()
+    return {'lisbon': ('Lisbon', index)}
+
+
 if __name__ == '__main__':
     d_indexes = air_now()
