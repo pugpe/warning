@@ -165,12 +165,26 @@ def air_quality():
 
 def lisbon():
     '''
+    Lisbon
+    http://www.qualar.org/INDEX.PHP?page=1&subzona=4
     '''
     url = 'http://www.qualar.org/INDEX.PHP?page=1&subzona=4'
     soup = BeautifulSoup(requests.get(url).content)
     td_base = soup.find('td', {'bgcolor': '#434343'})
     index = td_base.parent.parent.find('center').getText()
     return {'lisbon': ('Lisbon', index)}
+
+
+def guimaraes():
+    '''
+    Guimarães
+    http://www.qualar.org/INDEX.PHP?page=1&zona=141
+    '''
+    url = 'http://www.qualar.org/INDEX.PHP?page=1&zona=141'
+    soup = BeautifulSoup(requests.get(url).content)
+    td_base = soup.find('td', {'bgcolor': '#434343'})
+    index = td_base.parent.parent.find('center').getText()
+    return {'guimaraes': (u'Guimarães', index)}
 
 
 if __name__ == '__main__':
