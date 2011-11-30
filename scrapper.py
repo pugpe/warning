@@ -211,5 +211,23 @@ def santiago():
     return indexes
 
 
+def rio_de_janeiro():
+    '''
+    Rio de Janeiro (all zones)
+    http://infoper.homeip.net:8800/smac/boletim.jsp
+    '''
+    url = 'http://infoper.homeip.net:8800/smac/boletim.jsp'
+    soup = BeautifulSoup(requests.get(url).content)
+    zones = soup.findAll('td', {'class': 'td_st_name'})
+
+    indexes = {}
+    for td in zones:
+        tr = td.parent
+        index = tr.findAll('td', {'class': 'td_value'})[-2].getText()
+        indexes[slugify(td.getText())] = (td.getText(), index)
+
+    return indexes
+
+
 if __name__ == '__main__':
     d_indexes = air_now()
